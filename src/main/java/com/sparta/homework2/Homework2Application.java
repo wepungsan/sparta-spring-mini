@@ -1,10 +1,7 @@
 package com.sparta.homework2;
 
 import com.sparta.homework2.model.*;
-import com.sparta.homework2.repository.ArticleRepository;
-import com.sparta.homework2.repository.CommentRepository;
-import com.sparta.homework2.repository.LikeRepository;
-import com.sparta.homework2.repository.MemberRepository;
+import com.sparta.homework2.repository.*;
 import com.sparta.homework2.service.ArticleService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,16 +18,23 @@ public class Homework2Application {
 
 	@Bean
 	public CommandLineRunner demo(ArticleRepository articleRepository, CommentRepository commentRepository,
-								  MemberRepository memberRepository, LikeRepository likeRepository) {
+								  MemberRepository memberRepository, LikeRepository likeRepository,
+								  CategoryRepository categoryRepository) {
 		return (args) -> {
-			memberRepository.save(new Member("wepungsan", "1234", Authority.ROLE_USER));
+			memberRepository.save(new Member("wepungsan", "mary", "1234", Authority.ROLE_USER));
 
 			Member member1 = memberRepository.findById(1L)
 							.orElseThrow(() -> new NullPointerException("해당 유저가 존재하지 않습니다."));
 
-			articleRepository.save(new Article("제목01", "wepungsan", "1111", "내용01"));
-			articleRepository.save(new Article("제목02", "wepungsan", "2222", "내용02"));
-			articleRepository.save(new Article("제목03", "wepungsan", "3333", "내용03"));
+			categoryRepository.save(new Category("힙합"));
+
+			Category category1 = categoryRepository.findById(1L)
+							.orElseThrow(() -> new NullPointerException("해당 카테고리가 존재하지 않습니다."));
+			System.out.println(category1.getName());
+
+			articleRepository.save(new Article("제목01", "wepungsan", "1111", "내용01", category1));
+			articleRepository.save(new Article("제목02", "wepungsan", "2222", "내용02", category1));
+			articleRepository.save(new Article("제목03", "wepungsan", "3333", "내용03", category1));
 
 			System.out.println("데이터 인쇄");
 			List<Article> articleList = articleRepository.findAll();
@@ -41,6 +45,7 @@ public class Homework2Application {
 				System.out.println(article.getAuthor());
 				System.out.println(article.getPassword());
 				System.out.println(article.getContent());
+				System.out.println(article.getCategory());
 			}
 
 			Article article1 = articleRepository.findById(1L)

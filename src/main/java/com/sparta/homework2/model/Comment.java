@@ -26,7 +26,7 @@ public class Comment extends Timestamped {
     private String comment;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID", nullable = false)
+    @JoinColumn(name = "article_id", nullable = false)
     private Article article;
 
     public Comment(String name, String comment, Article article) {

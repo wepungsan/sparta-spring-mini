@@ -34,6 +34,10 @@ public class Article extends Timestamped {
     @Column(nullable = false)
     private String content;
 
+    @OneToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @JsonIgnore
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
@@ -42,11 +46,12 @@ public class Article extends Timestamped {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
 
-    public Article(String title, String author, String password, String content) {
+    public Article(String title, String author, String password, String content, Category category) {
         this.title = title;
         this.author = author;
         this.password = password;
         this.content = content;
+        this.category = category;
     }
 
     public Article(String username, ArticleRequestDto requestDto) {
