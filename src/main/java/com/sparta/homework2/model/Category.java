@@ -18,9 +18,6 @@ public class Category {
     @Column(nullable = false)
     private String name;
 
-    @OneToOne(mappedBy = "category")
-    private Article article;
-
     public Category(String name) {
         this.name = name;
     }
