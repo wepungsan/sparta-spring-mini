@@ -30,9 +30,6 @@ public class Article extends Timestamped {
     private String author;
 
     @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
     private String content;
 
     @Column
@@ -46,30 +43,28 @@ public class Article extends Timestamped {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
 
-    public Article(String title, String author, String password, String content) {
+    public Article(String title, String author, String content) {
         this.title = title;
         this.author = author;
-        this.password = password;
         this.content = content;
     }
 
     public Article(String username, ArticleRequestDto requestDto, String s3FileName) {
         this.title = requestDto.getTitle();
         this.author = username;
-        this.password = requestDto.getPassword();
         this.content = requestDto.getContent();
         this.image = s3FileName;
     }
 
-    public void update(String username, ArticleRequestDto requestDto) {
+    public void update(String username, ArticleRequestDto requestDto, String s3FileName) {
         this.title = requestDto.getTitle();
         this.author = username;
-        this.password = requestDto.getPassword();
         this.content = requestDto.getContent();
+        this.image = s3FileName;
     }
 
     public ArticleResponseDto toDto() {
         int likseSize = this.likes.size();
-        return new ArticleResponseDto(this.title, this.author, this.content, this.comments, likseSize);
+        return new ArticleResponseDto(this.title, this.author, this.content, this.comments, likseSize, this.image);
     }
 }

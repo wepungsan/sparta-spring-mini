@@ -29,17 +29,12 @@ public class ArticleController {
     }
 
     @PostMapping(value = "/api/article", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> createArticle(@RequestPart ArticleRequestDto requestDto, @RequestPart MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<?> createArticle(@RequestPart(value = "json") ArticleRequestDto requestDto, @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
         return ResponseEntity.ok(articleService.createArticle(requestDto, multipartFile));
     }
 
-    @PostMapping("/api/article/{id}")
-    public ResponseEntity<?> checkPassword(@PathVariable Long id, @RequestBody ArticlePasswordRequestDto requestDto) throws SQLException {
-        return ResponseEntity.ok(articleService.checkPassword(id, requestDto));
-    }
-
     @DeleteMapping("/api/article/{id}")
-    public ResponseEntity<?> deleteMemo(@PathVariable Long id) {
+    public ResponseEntity<?> deleteArticle(@PathVariable Long id) {
         try {
             articleService.deleteArticle(id);
             return ResponseEntity.ok(id);
@@ -50,10 +45,10 @@ public class ArticleController {
         }
     }
 
-    @PutMapping("/api/article/{id}")
-    public ResponseEntity<?> updateMemo(@PathVariable Long id, @RequestBody ArticleRequestDto requestDto) {
+    @PutMapping(value = "/api/article/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> updateArticle(@PathVariable Long id, @RequestPart(value = "json") ArticleRequestDto requestDto, @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
         try {
-            return ResponseEntity.ok(articleService.update(id, requestDto));
+            return ResponseEntity.ok(articleService.update(id, requestDto, multipartFile));
         } catch (NullPointerException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.valueOf(404));
         } catch (RuntimeException e) {
