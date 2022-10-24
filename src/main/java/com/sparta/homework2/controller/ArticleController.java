@@ -5,10 +5,12 @@ import com.sparta.homework2.dto.ArticleRequestDto;
 import com.sparta.homework2.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletRequest;
+import java.io.IOException;
 import java.sql.SQLException;
 
 @RequiredArgsConstructor
@@ -26,9 +28,9 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.getArticle(id));
     }
 
-    @PostMapping("/api/article")
-    public ResponseEntity<?> createArticle(@RequestBody ArticleRequestDto requestDto) throws SQLException {
-        return ResponseEntity.ok(articleService.createArticle(requestDto));
+    @PostMapping(value = "/api/article", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> createArticle(@RequestPart ArticleRequestDto requestDto, @RequestPart MultipartFile multipartFile) throws IOException {
+        return ResponseEntity.ok(articleService.createArticle(requestDto, multipartFile));
     }
 
     @PostMapping("/api/article/{id}")

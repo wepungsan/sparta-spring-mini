@@ -1,12 +1,13 @@
 package com.sparta.homework2.model;
 
-import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.homework2.dto.ArticleRequestDto;
 import com.sparta.homework2.dto.ArticleResponseDto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -34,6 +35,9 @@ public class Article extends Timestamped {
     @Column(nullable = false)
     private String content;
 
+    @Column
+    private String image;
+
     @JsonIgnore
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
@@ -49,11 +53,12 @@ public class Article extends Timestamped {
         this.content = content;
     }
 
-    public Article(String username, ArticleRequestDto requestDto) {
+    public Article(String username, ArticleRequestDto requestDto, String s3FileName) {
         this.title = requestDto.getTitle();
         this.author = username;
         this.password = requestDto.getPassword();
         this.content = requestDto.getContent();
+        this.image = s3FileName;
     }
 
     public void update(String username, ArticleRequestDto requestDto) {
