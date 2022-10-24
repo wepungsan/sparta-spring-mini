@@ -2,7 +2,6 @@ package com.sparta.homework2;
 
 import com.sparta.homework2.model.*;
 import com.sparta.homework2.repository.*;
-import com.sparta.homework2.service.ArticleService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
