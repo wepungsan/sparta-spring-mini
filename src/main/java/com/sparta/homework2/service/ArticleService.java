@@ -62,7 +62,7 @@ public class ArticleService {
         return articleDto;
     }
 
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public Article createArticle(ArticleRequestDto requestDto, MultipartFile multipartFile) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
@@ -108,7 +108,7 @@ public class ArticleService {
         return id;
     }
 
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public Article update(Long id, ArticleRequestDto requestDto, MultipartFile multipartFile) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
