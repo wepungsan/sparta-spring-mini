@@ -62,7 +62,7 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDto logout() {
+    public void logout() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
@@ -79,9 +79,6 @@ public class AuthService {
                 .build();
 
         refreshTokenRepository.save(refreshToken);
-
-        // 토큰 발급
-        return tokenDto;
     }
 
     @Transactional
