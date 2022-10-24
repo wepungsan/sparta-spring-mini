@@ -7,12 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ArticleRequestDto {
     private String title;
-    private String password;
     private String content;
 
-    public ArticleRequestDto(String title, String password, String content) {
+    public ArticleRequestDto(String title, String content) {
         this.title = title;
-        this.password = password;
         this.content = content;
     }
 }

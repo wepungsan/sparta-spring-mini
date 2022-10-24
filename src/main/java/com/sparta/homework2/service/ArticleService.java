@@ -1,6 +1,7 @@
 package com.sparta.homework2.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.sparta.homework2.dto.ArticlePasswordRequestDto;
 import com.sparta.homework2.dto.ArticleRequestDto;
@@ -30,8 +31,8 @@ import java.util.stream.Collectors;
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final MemberRepository memberRepository;
-    private final TokenProvider tokenProvider;
     private final AmazonS3 amazonS3;
+    private final AmazonS3Client amazonS3Client;
 
 
     @Value("${cloud.aws.s3.bucket}")
@@ -45,23 +46,20 @@ public class ArticleService {
     }
 
     public ArticleResponseDto getArticle(Long id) throws SQLException {
-        ArticleResponseDto articleDto = articleRepository.findById(id).orElse(null).toDto();
-        return articleDto;
-    }
-
-    public String checkPassword(Long id, ArticlePasswordRequestDto requestDto) throws SQLException {
         Article article = articleRepository.findById(id).orElse(null);
+        String image = article.getImage();
 
-        try {
-            if(article.getPassword().equals(requestDto.getPassword())) {
-                return "일치합니다.";
-            } else {
-                return "일치하지 않습니다.";
-            }
-        }
-        catch (NullPointerException ex) {
-            return ex.getMessage();
-        }
+        // 이미지 불러오기
+        String imgPath = amazonS3Client.getUrl(bucket, image).toString();
+
+        // 객체에 이미지 경로 저장
+        article.setImage(imgPath);
+        
+        // 객체를 DTO로 변환
+        // DTO에 이미지 경로 저장
+        ArticleResponseDto articleDto = article.toDto();
+
+        return articleDto;
     }
 
     @org.springframework.transaction.annotation.Transactional
@@ -73,7 +71,7 @@ public class ArticleService {
                 .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
 
         String s3FileName = null;
-//        String image = null;
+        // String image = null;
         if(!multipartFile.isEmpty()) {
             s3FileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
 
@@ -81,7 +79,7 @@ public class ArticleService {
             objMeta.setContentLength(multipartFile.getInputStream().available());
 
             amazonS3.putObject(bucket,s3FileName,multipartFile.getInputStream(),objMeta);
-//            image = amazonS3.getUrl(bucket,s3FileName).toString();
+            // image = amazonS3.getUrl(bucket,s3FileName).toString();
         }
 
         // 요청받은 DTO 로 DB에 저장할 객체 만들기
@@ -110,8 +108,8 @@ public class ArticleService {
         return id;
     }
 
-    @Transactional
-    public Article update(Long id, ArticleRequestDto requestDto) {
+    @org.springframework.transaction.annotation.Transactional
+    public Article update(Long id, ArticleRequestDto requestDto, MultipartFile multipartFile) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
@@ -125,10 +123,21 @@ public class ArticleService {
            throw new RuntimeException("작성자만 수정할 수 있습니다.");
         }
 
-        article.setAuthor(member.getUsername());
-        article.setTitle(requestDto.getTitle());
-        article.setContent(requestDto.getContent());
-        article.setPassword(requestDto.getPassword());
+        String s3FileName = null;
+        // String image = null;
+        if(!multipartFile.isEmpty()) {
+            s3FileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
+
+            ObjectMetadata objMeta = new ObjectMetadata();
+            objMeta.setContentLength(multipartFile.getInputStream().available());
+
+            amazonS3.putObject(bucket,s3FileName,multipartFile.getInputStream(),objMeta);
+            // image = amazonS3.getUrl(bucket,s3FileName).toString();
+        }
+
+        // 객체 수정
+        article.update(member.getUsername(), requestDto, s3FileName);
+
         articleRepository.save(article);
 
         return article;
