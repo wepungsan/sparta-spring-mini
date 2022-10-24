@@ -27,6 +27,7 @@ public class TokenProvider {
     private static final String BEARER_TYPE = "bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 10 * 60 * 1000;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000;
+    private static final long EXPIRE_TIME = 0;
 
     private final Key key;
 
@@ -54,6 +55,28 @@ public class TokenProvider {
         // Refresh Token
         String refreshToken = Jwts.builder()
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+
+        return TokenDto.builder()
+                .grantType(BEARER_TYPE)
+                .accessToken(accessToken)
+                .accessTokenExpiresIn(acessTokenExpiresIn.getTime())
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public TokenDto generateExpireTokenDto() {
+        // Access Token
+        Date acessTokenExpiresIn = new Date(EXPIRE_TIME);
+        String accessToken = Jwts.builder()
+                .setExpiration(acessTokenExpiresIn)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+
+        // Refresh Token
+        String refreshToken = Jwts.builder()
+                .setExpiration(new Date(EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
