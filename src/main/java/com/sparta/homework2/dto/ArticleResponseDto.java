@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ArticleResponseDto {
+    private Long id;
     private String title;
     private String author;
     private String content;
@@ -21,8 +22,9 @@ public class ArticleResponseDto {
     private List<Comment> comments;
     private int likesSize;
 
-    public ArticleResponseDto(String title, String author, String content, List<Comment> comments,
+    public ArticleResponseDto(Long id, String title, String author, String content, List<Comment> comments,
                               int likesSize, String image, String singer, String song) {
+        this.id = id;
         this.title = title;
         this.author = author;
         this.content = content;
