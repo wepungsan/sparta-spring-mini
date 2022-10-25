@@ -29,6 +29,10 @@ public class AuthService {
 
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
+        if(!memberRequestDto.getPassword().equals(memberRequestDto.getPasswordCheck())) {
+            throw new RuntimeException("패스워드와 확인 패스워드가 일치하지 않습니다.");
+        }
+
         if (memberRepository.existsByUsername(memberRequestDto.getUsername())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
