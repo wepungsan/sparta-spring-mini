@@ -37,6 +37,11 @@ public class AuthController {
         authService.logout();
     }
 
+    @PostMapping("/idCheck")
+    public ResponseEntity<?> idCheck(@RequestBody MemberRequestDto memberRequestDto) {
+        return ResponseEntity.ok(authService.idCheck(memberRequestDto));
+    }
+
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
         return ResponseEntity.ok(authService.reissue(tokenRequestDto));
