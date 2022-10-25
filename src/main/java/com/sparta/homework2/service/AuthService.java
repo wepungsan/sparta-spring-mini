@@ -82,6 +82,19 @@ public class AuthService {
     }
 
     @Transactional
+    public Boolean idCheck(MemberRequestDto memberRequestDto) {
+        Member member = memberRepository.findByUsername(memberRequestDto.getUsername())
+                .orElseGet(() -> new Member());
+
+        if(member.getUsername() != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    @Transactional
     public TokenDto reissue(TokenRequestDto tokenRequestDto) {
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
