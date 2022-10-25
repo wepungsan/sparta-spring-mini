@@ -32,6 +32,12 @@ public class Article extends Timestamped {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private String singer;
+
+    @Column(nullable = false)
+    private String song;
+
     @Column
     private String image;
 
@@ -53,6 +59,8 @@ public class Article extends Timestamped {
         this.title = requestDto.getTitle();
         this.author = username;
         this.content = requestDto.getContent();
+        this.singer = requestDto.getSinger();
+        this.song = requestDto.getSong();
         this.image = s3FileName;
     }
 
@@ -60,6 +68,8 @@ public class Article extends Timestamped {
         this.title = requestDto.getTitle();
         this.author = username;
         this.content = requestDto.getContent();
+        this.singer = requestDto.getSinger();
+        this.song = requestDto.getSong();
         this.image = s3FileName;
     }
 

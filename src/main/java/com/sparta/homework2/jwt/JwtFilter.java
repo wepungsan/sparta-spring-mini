@@ -22,7 +22,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
 
     @Override
-    protected  void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         // 1. Request Header 에서 토큰을 꺼냄
         String accessToken = resolveAccessToken(request);
         String refreshToken = resolveRefreshToken(request);
@@ -35,7 +35,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         // refreshToken 검사
-        if(StringUtils.hasText(accessToken) && tokenProvider.validateToken(refreshToken)) {
+        if(StringUtils.hasText(refreshToken) && tokenProvider.validateToken(refreshToken)) {
             log.info("JWT Refresh 토큰이 통과되었습니다.");
         }
 
