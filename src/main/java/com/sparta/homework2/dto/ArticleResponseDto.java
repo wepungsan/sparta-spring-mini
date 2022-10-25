@@ -15,16 +15,21 @@ public class ArticleResponseDto {
     private String title;
     private String author;
     private String content;
+    private String singer;
+    private String song;
     private String image;
     private List<Comment> comments;
     private int likesSize;
 
-    public ArticleResponseDto(String title, String author, String content, List<Comment> comments, int likesSize, String image) {
+    public ArticleResponseDto(String title, String author, String content, List<Comment> comments,
+                              int likesSize, String image, String singer, String song) {
         this.title = title;
         this.author = author;
         this.content = content;
         this.comments = comments;
         this.likesSize = likesSize;
         this.image = image;
+        this.singer = singer;
+        this.song = song;
     }
 }

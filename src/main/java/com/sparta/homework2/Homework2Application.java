@@ -25,9 +25,9 @@ public class Homework2Application {
 			Member member1 = memberRepository.findById(1L)
 							.orElseThrow(() -> new NullPointerException("해당 유저가 존재하지 않습니다."));
 
-			articleRepository.save(new Article("제목01", "wepungsan", "내용01"));
-			articleRepository.save(new Article("제목02", "wepungsan", "내용02"));
-			articleRepository.save(new Article("제목03", "wepungsan", "내용03"));
+			articleRepository.save(new Article("제목01", "wepungsan", "내용01", "이선희", "노래01"));
+			articleRepository.save(new Article("제목02", "wepungsan", "내용02", "이선희", "노래01"));
+			articleRepository.save(new Article("제목03", "wepungsan", "내용03", "이선희", "노래01"));
 
 			System.out.println("데이터 인쇄");
 			List<Article> articleList = articleRepository.findAll();
@@ -37,6 +37,8 @@ public class Homework2Application {
 				System.out.println(article.getTitle());
 				System.out.println(article.getAuthor());
 				System.out.println(article.getContent());
+				System.out.println(article.getSinger());
+				System.out.println(article.getSong());
 			}
 
 			Article article1 = articleRepository.findById(1L)

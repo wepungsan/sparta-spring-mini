@@ -49,10 +49,12 @@ public class Article extends Timestamped {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
 
-    public Article(String title, String author, String content) {
+    public Article(String title, String author, String content, String singer, String song) {
         this.title = title;
         this.author = author;
         this.content = content;
+        this.singer = singer;
+        this.song = song;
     }
 
     public Article(String username, ArticleRequestDto requestDto, String s3FileName) {
@@ -75,6 +77,6 @@ public class Article extends Timestamped {
 
     public ArticleResponseDto toDto() {
         int likseSize = this.likes.size();
-        return new ArticleResponseDto(this.title, this.author, this.content, this.comments, likseSize, this.image);
+        return new ArticleResponseDto(this.title, this.author, this.content, this.comments, likseSize, this.image, this.singer, this.song);
     }
 }
