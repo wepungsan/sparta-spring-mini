@@ -1,9 +1,6 @@
 package com.sparta.homework2.service;
 
-import com.sparta.homework2.dto.MemberRequestDto;
-import com.sparta.homework2.dto.MemberResponseDto;
-import com.sparta.homework2.dto.TokenRequestDto;
-import com.sparta.homework2.dto.TokenDto;
+import com.sparta.homework2.dto.*;
 import com.sparta.homework2.model.Member;
 import com.sparta.homework2.model.RefreshToken;
 import com.sparta.homework2.jwt.TokenProvider;
@@ -17,6 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +41,7 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDto login(MemberRequestDto memberRequestDto) {
+    public LoginResponseDto login(MemberRequestDto memberRequestDto) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = memberRequestDto.toAuthentication();
 
@@ -61,8 +60,19 @@ public class AuthService {
 
         refreshTokenRepository.save(refreshToken);
 
+        Member member = memberRepository.findByUsername(memberRequestDto.getUsername())
+                .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
+
+        LoginResponseDto loginResponseDto = LoginResponseDto.builder()
+                .nickname(member.getNickname())
+                .grantType(tokenDto.getGrantType())
+                .accessToken(tokenDto.getAccessToken())
+                .refreshToken(tokenDto.getRefreshToken())
+                .accessTokenExpiresIn(tokenDto.getAccessTokenExpiresIn())
+                .build();
+
         // 5. 토큰 발급
-        return tokenDto;
+        return loginResponseDto;
     }
 
     @Transactional
