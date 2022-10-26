@@ -82,6 +82,6 @@ public class Article extends Timestamped {
 
     public ArticleResponseDto toDto() {
         int likseSize = this.likes.size();
-        return new ArticleResponseDto(this.id, this.title, this.author, this.content, this.comments, likseSize, this.image, this.singer, this.song);
+        return new ArticleResponseDto(this.id, this.title, this.author, this.content, likseSize, this.image, this.singer, this.song);
     }
 }

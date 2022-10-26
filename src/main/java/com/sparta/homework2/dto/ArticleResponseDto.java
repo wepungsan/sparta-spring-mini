@@ -22,13 +22,12 @@ public class ArticleResponseDto {
     private List<Comment> comments;
     private int likesSize;
 
-    public ArticleResponseDto(Long id, String title, String author, String content, List<Comment> comments,
+    public ArticleResponseDto(Long id, String title, String author, String content,
                               int likesSize, String image, String singer, String song) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.content = content;
-        this.comments = comments;
         this.likesSize = likesSize;
         this.image = image;
         this.singer = singer;
