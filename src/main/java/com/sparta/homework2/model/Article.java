@@ -3,6 +3,10 @@ package com.sparta.homework2.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.homework2.dto.ArticleRequestDto;
 import com.sparta.homework2.dto.ArticleResponseDto;
+import com.sparta.homework2.dto.request.ContentRequestDto;
+import com.sparta.homework2.dto.request.SingerRequestDto;
+import com.sparta.homework2.dto.request.SongRequestDto;
+import com.sparta.homework2.dto.request.TitleRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,12 +60,13 @@ public class Article extends Timestamped {
         this.song = song;
     }
 
-    public Article(String username, ArticleRequestDto requestDto, String s3FileName) {
-        this.title = requestDto.getTitle();
+    public Article(String username, TitleRequestDto titleRequestDto, ContentRequestDto contentRequestDto, SongRequestDto songRequestDto
+            , SingerRequestDto singerRequestDto, String s3FileName) {
+        this.title = titleRequestDto.getTitle();
         this.author = username;
-        this.content = requestDto.getContent();
-        this.singer = requestDto.getSinger();
-        this.song = requestDto.getSong();
+        this.content = contentRequestDto.getContent();
+        this.singer = singerRequestDto.getSinger();
+        this.song = songRequestDto.getSong();
         this.image = s3FileName;
     }
 

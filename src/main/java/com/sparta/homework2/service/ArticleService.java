@@ -6,6 +6,10 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.sparta.homework2.dto.ArticlePasswordRequestDto;
 import com.sparta.homework2.dto.ArticleRequestDto;
 import com.sparta.homework2.dto.ArticleResponseDto;
+import com.sparta.homework2.dto.request.ContentRequestDto;
+import com.sparta.homework2.dto.request.SingerRequestDto;
+import com.sparta.homework2.dto.request.SongRequestDto;
+import com.sparta.homework2.dto.request.TitleRequestDto;
 import com.sparta.homework2.jwt.TokenProvider;
 import com.sparta.homework2.model.Article;
 import com.sparta.homework2.model.Member;
@@ -63,7 +67,8 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article createArticle(ArticleRequestDto requestDto, MultipartFile multipartFile) throws IOException {
+    public Article createArticle(TitleRequestDto titleRequestDto, ContentRequestDto contentRequestDto, SongRequestDto songRequestDto
+            , SingerRequestDto singerRequestDto, MultipartFile multipartFile) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
@@ -83,7 +88,7 @@ public class ArticleService {
         }
 
         // 요청받은 DTO 로 DB에 저장할 객체 만들기
-        Article article = new Article(member.getUsername(), requestDto, s3FileName);
+        Article article = new Article(member.getUsername(), titleRequestDto, contentRequestDto, songRequestDto, singerRequestDto, s3FileName);
 
         articleRepository.save(article);
 
