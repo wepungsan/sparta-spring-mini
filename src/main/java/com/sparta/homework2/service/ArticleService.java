@@ -120,7 +120,7 @@ public class ArticleService {
 
     @Transactional
     public Article updateArticle(Long id, TitleRequestDto titleRequestDto, ContentRequestDto contentRequestDto, SongRequestDto songRequestDto
-            , SingerRequestDto singerRequestDto, MultipartFile multipartFile) throws IOException {
+            , SingerRequestDto singerRequestDto) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
@@ -134,25 +134,13 @@ public class ArticleService {
            throw new RuntimeException("작성자만 수정할 수 있습니다.");
         }
 
-        String s3FileName = null;
-        // String image = null;
-        if(!multipartFile.isEmpty()) {
-            s3FileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
+        String image = article.getImage();
 
-            ObjectMetadata objMeta = new ObjectMetadata();
-            objMeta.setContentLength(multipartFile.getInputStream().available());
+        // 이미지 불러오기
+        String imgPath = amazonS3Client.getUrl(bucket, image).toString();
 
-            amazonS3.putObject(bucket,s3FileName,multipartFile.getInputStream(),objMeta);
-            // image = amazonS3.getUrl(bucket,s3FileName).toString();
-        } else {
-            String image = article.getImage();
-
-            // 이미지 불러오기
-            String imgPath = amazonS3Client.getUrl(bucket, image).toString();
-
-            // 변수에 이미지 경로 저장
-            s3FileName = imgPath;
-        }
+        // 변수에 이미지 경로 저장
+        String s3FileName = imgPath;
 
         // 객체 수정
         article.update(member.getUsername(), titleRequestDto, contentRequestDto, songRequestDto, singerRequestDto, s3FileName);
