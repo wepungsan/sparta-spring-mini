@@ -119,7 +119,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article update(Long id, TitleRequestDto titleRequestDto, ContentRequestDto contentRequestDto, SongRequestDto songRequestDto
+    public Article updateArticle(Long id, TitleRequestDto titleRequestDto, ContentRequestDto contentRequestDto, SongRequestDto songRequestDto
             , SingerRequestDto singerRequestDto, MultipartFile multipartFile) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
@@ -144,6 +144,14 @@ public class ArticleService {
 
             amazonS3.putObject(bucket,s3FileName,multipartFile.getInputStream(),objMeta);
             // image = amazonS3.getUrl(bucket,s3FileName).toString();
+        } else {
+            String image = article.getImage();
+
+            // 이미지 불러오기
+            String imgPath = amazonS3Client.getUrl(bucket, image).toString();
+
+            // 변수에 이미지 경로 저장
+            s3FileName = imgPath;
         }
 
         // 객체 수정

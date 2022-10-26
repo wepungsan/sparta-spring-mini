@@ -60,7 +60,7 @@ public class ArticleController {
                                            @RequestParam (value = "singer" ) SingerRequestDto singerRequestDto,
                                            @RequestParam (value = "file") MultipartFile multipartFile) throws IOException {
         try {
-            return ResponseEntity.ok(articleService.update(id, titleRequestDto, contentRequestDto, songRequestDto, singerRequestDto, multipartFile));
+            return ResponseEntity.ok(articleService.updateArticle(id, titleRequestDto, contentRequestDto, songRequestDto, singerRequestDto, multipartFile));
         } catch (NullPointerException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.valueOf(404));
         } catch (RuntimeException e) {
