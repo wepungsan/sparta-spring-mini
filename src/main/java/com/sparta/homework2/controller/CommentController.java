@@ -30,10 +30,10 @@ public class CommentController {
         return ResponseEntity.ok(commentService.createComment(id, requestDto));
     }
 
-    @PutMapping("/api/comment")
-    public ResponseEntity<?> updateMemo(@RequestBody CommentUpdateRequestDto requestDto) {
+    @PutMapping("/api/comment/{id}")
+    public ResponseEntity<?> updateMemo(@PathVariable Long id, @RequestBody CommentUpdateRequestDto requestDto) {
         try {
-            return ResponseEntity.ok(commentService.updateComment(requestDto));
+            return ResponseEntity.ok(commentService.updateComment(id, requestDto));
         } catch (NullPointerException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.valueOf(404));
         } catch (RuntimeException e) {

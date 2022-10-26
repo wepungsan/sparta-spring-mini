@@ -29,8 +29,4 @@ public class MemberRequestDto {
     public UsernamePasswordAuthenticationToken toAuthentication() {
         return new UsernamePasswordAuthenticationToken(username, password);
     }
-
-    static public UsernamePasswordAuthenticationToken toAuthenticationByUsernameAndPassword(String username, String password) {
-        return new UsernamePasswordAuthenticationToken(username, password);
-    }
 }

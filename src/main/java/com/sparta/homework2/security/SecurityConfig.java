@@ -4,6 +4,7 @@ import com.sparta.homework2.jwt.JwtAccessDeniedHandler;
 import com.sparta.homework2.jwt.JwtSecurityConfig;
 import com.sparta.homework2.jwt.JwtAuthenticationEntryPoint;
 import com.sparta.homework2.jwt.TokenProvider;
+import com.sparta.homework2.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -70,6 +72,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .and()
-                .apply(new JwtSecurityConfig(tokenProvider));
+                .apply(new JwtSecurityConfig(tokenProvider, refreshTokenRepository));
     }
 }

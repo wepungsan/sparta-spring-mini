@@ -18,7 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Article extends Timestamped {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

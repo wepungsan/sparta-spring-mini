@@ -24,7 +24,6 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
     private final MemberRepository memberRepository;
-    private final TokenProvider tokenProvider;
 
     public List<CommentResponseDto> getComments(Long id) throws SQLException {
         Article article = articleRepository.findById(id)
@@ -55,14 +54,14 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment updateComment(CommentUpdateRequestDto requestDto) {
+    public Comment updateComment(Long id, CommentUpdateRequestDto requestDto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
         Member member = memberRepository.findById(authId)
                 .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
 
-        Comment comment = commentRepository.findById(requestDto.getId())
+        Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 댓글이 존재하지 않습니다."));
 
         if(!member.getUsername().equals(comment.getName())) {
@@ -70,7 +69,6 @@ public class CommentService {
         }
 
         comment.setComment(requestDto.getComment());
-        comment.setName(requestDto.getName());
         commentRepository.save(comment);
 
         return comment;
@@ -84,7 +82,7 @@ public class CommentService {
                 .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
 
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new NullPointerException("해당 글이 존재하지 않습니다."));
+                .orElseThrow(() -> new NullPointerException("해당 댓글이 존재하지 않습니다."));
 
         if(!member.getUsername().equals(comment.getName())) {
             throw new RuntimeException("작성자만 삭제할 수 있습니다.");
