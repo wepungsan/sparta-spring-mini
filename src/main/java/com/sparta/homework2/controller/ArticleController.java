@@ -2,6 +2,10 @@ package com.sparta.homework2.controller;
 
 import com.sparta.homework2.dto.ArticlePasswordRequestDto;
 import com.sparta.homework2.dto.ArticleRequestDto;
+import com.sparta.homework2.dto.request.ContentRequestDto;
+import com.sparta.homework2.dto.request.SingerRequestDto;
+import com.sparta.homework2.dto.request.SongRequestDto;
+import com.sparta.homework2.dto.request.TitleRequestDto;
 import com.sparta.homework2.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,9 +32,13 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.getArticle(id));
     }
 
-    @PostMapping(value = "/api/article", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> createArticle(@RequestPart(value = "json") ArticleRequestDto requestDto, @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
-        return ResponseEntity.ok(articleService.createArticle(requestDto, multipartFile));
+    @PostMapping(value = "/api/article", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> createArticle(@RequestParam (value = "title" )TitleRequestDto titleRequestDto,
+                                           @RequestParam (value = "content" )ContentRequestDto contentRequestDto,
+                                           @RequestParam (value = "song" ) SongRequestDto songRequestDto,
+                                           @RequestParam (value = "singer" ) SingerRequestDto singerRequestDto,
+                                           @RequestParam (value = "file") MultipartFile multipartFile) throws IOException {
+        return ResponseEntity.ok(articleService.createArticle(titleRequestDto, contentRequestDto, songRequestDto, singerRequestDto,multipartFile));
     }
 
     @DeleteMapping("/api/article/{id}")
