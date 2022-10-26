@@ -44,7 +44,12 @@ public class ArticleService {
 
     public List<ArticleResponseDto> getArticles() throws SQLException {
         List<ArticleResponseDto> articlesDto = articleRepository.findAll()
-                .stream().map(article -> article.toDto()).collect(Collectors.toList());
+                .stream().map((article) -> {
+                    String image = article.getImage();
+                    String imgPath = amazonS3Client.getUrl(bucket, image).toString();
+                    article.setImage(imgPath);
+                    return article.toDto();
+                }).collect(Collectors.toList());
 
         return articlesDto;
     }
@@ -114,7 +119,8 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article update(Long id, ArticleRequestDto requestDto, MultipartFile multipartFile) throws IOException {
+    public Article update(Long id, TitleRequestDto titleRequestDto, ContentRequestDto contentRequestDto, SongRequestDto songRequestDto
+            , SingerRequestDto singerRequestDto, MultipartFile multipartFile) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long authId = Long.parseLong(auth.getName());
 
@@ -141,7 +147,7 @@ public class ArticleService {
         }
 
         // 객체 수정
-        article.update(member.getUsername(), requestDto, s3FileName);
+        article.update(member.getUsername(), titleRequestDto, contentRequestDto, songRequestDto, singerRequestDto, s3FileName);
 
         articleRepository.save(article);
 

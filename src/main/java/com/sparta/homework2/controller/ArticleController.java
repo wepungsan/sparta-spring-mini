@@ -33,12 +33,12 @@ public class ArticleController {
     }
 
     @PostMapping(value = "/api/article", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> createArticle(@RequestParam (value = "title" )TitleRequestDto titleRequestDto,
-                                           @RequestParam (value = "content" )ContentRequestDto contentRequestDto,
+    public ResponseEntity<?> createArticle(@RequestParam (value = "title" ) TitleRequestDto titleRequestDto,
+                                           @RequestParam (value = "content" ) ContentRequestDto contentRequestDto,
                                            @RequestParam (value = "song" ) SongRequestDto songRequestDto,
                                            @RequestParam (value = "singer" ) SingerRequestDto singerRequestDto,
                                            @RequestParam (value = "file") MultipartFile multipartFile) throws IOException {
-        return ResponseEntity.ok(articleService.createArticle(titleRequestDto, contentRequestDto, songRequestDto, singerRequestDto,multipartFile));
+        return ResponseEntity.ok(articleService.createArticle(titleRequestDto, contentRequestDto, songRequestDto, singerRequestDto, multipartFile));
     }
 
     @DeleteMapping("/api/article/{id}")
@@ -54,9 +54,13 @@ public class ArticleController {
     }
 
     @PutMapping(value = "/api/article/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> updateArticle(@PathVariable Long id, @RequestPart(value = "json") ArticleRequestDto requestDto, @RequestPart(value = "file") MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<?> updateArticle(@PathVariable Long id, @RequestParam (value = "title" ) TitleRequestDto titleRequestDto,
+                                           @RequestParam (value = "content" ) ContentRequestDto contentRequestDto,
+                                           @RequestParam (value = "song" ) SongRequestDto songRequestDto,
+                                           @RequestParam (value = "singer" ) SingerRequestDto singerRequestDto,
+                                           @RequestParam (value = "file") MultipartFile multipartFile) throws IOException {
         try {
-            return ResponseEntity.ok(articleService.update(id, requestDto, multipartFile));
+            return ResponseEntity.ok(articleService.update(id, titleRequestDto, contentRequestDto, songRequestDto, singerRequestDto, multipartFile));
         } catch (NullPointerException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.valueOf(404));
         } catch (RuntimeException e) {

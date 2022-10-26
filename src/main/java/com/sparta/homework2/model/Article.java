@@ -70,12 +70,13 @@ public class Article extends Timestamped {
         this.image = s3FileName;
     }
 
-    public void update(String username, ArticleRequestDto requestDto, String s3FileName) {
-        this.title = requestDto.getTitle();
+    public void update(String username, TitleRequestDto titleRequestDto, ContentRequestDto contentRequestDto, SongRequestDto songRequestDto
+            , SingerRequestDto singerRequestDto, String s3FileName) {
+        this.title = titleRequestDto.getTitle();
         this.author = username;
-        this.content = requestDto.getContent();
-        this.singer = requestDto.getSinger();
-        this.song = requestDto.getSong();
+        this.content = contentRequestDto.getContent();
+        this.singer = singerRequestDto.getSinger();
+        this.song = songRequestDto.getSong();
         this.image = s3FileName;
     }
 
